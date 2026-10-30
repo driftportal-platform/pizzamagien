@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 — 2026-10-30
+- Egen pizza vises inde i ovnen, med gylden farve, advarsel og røg ved brændt pizza.
+- Rå før 6 sekunder, klar 6–12, advarsel 13–17 og brændt fra 18 sekunder.
+- Spilleren tager selv pizzaen ud; tiden følger faktisk forløbet tid.
+- Pizzadisk med fire pladser og tre ventende kunder.
+- Rigtige, bagte bestillinger giver 10 mønter og tre stjerner. Forkert kunde, rå eller brændt pizza giver ingen betaling.
+- Lokalt gemt møntsaldo og synligt versionsnummer på forsiden.
+
+
 ## 0.3.1 — 2026-10-30
 - Otte nye teksturerede SVG-illustrationer: revet ost, skinkestrimler, pepperoni, majskerne, ananas, champignonskive, peberfrugtring og olivenring.
 - Samme illustrationer bruges i bakken, under træk, på bestillinger og på pizzaen.

@@ -43,8 +43,8 @@ export function Pizza({
     <div
       ref={ref}
       data-pizza
-      role="button"
-      tabIndex={interactive ? 0 : -1}
+      role={interactive ? "button" : "img"}
+      tabIndex={interactive ? 0 : undefined}
       aria-disabled={!interactive}
       aria-label={
         selected === "sauce"
@@ -155,7 +155,7 @@ export function Pizza({
                 background: i.color,
               }}
             >
-              <IngredientArt id={t.ingredient}/>
+              <IngredientArt id={t.ingredient} />
             </div>
           );
         })}

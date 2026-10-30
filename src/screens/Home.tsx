@@ -3,9 +3,11 @@ import type { Mode } from "../types/game";
 export function Home({
   onStart,
   stars,
+  coins,
 }: {
   onStart: (mode: Mode) => void;
   stars: number;
+  coins: number;
 }) {
   return (
     <main className="home">
@@ -32,7 +34,10 @@ export function Home({
             <strong>Mit pizzeria</strong>
             <small>Lav pizzaer til kunder</small>
           </button>
-          <div className="stars">⭐ {stars} stjerner samlet</div>
+          <div className="stars">
+            ⭐ {stars} stjerner · 🪙 {coins} mønter
+          </div>
+          <small className="version-label">PizzaMagien v0.4.0</small>
         </div>
       </div>
     </main>

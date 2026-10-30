@@ -26,3 +26,15 @@ No deployment or changes to GitHub/hosting were performed.
 - Kontrolleret at alle 24 viste ingrediensbilleder (bakke og pizza) var indlæst.
 - Kontrolleret at fyld og sovs blev bevaret ved overgang til ovnen.
 - Tegnede SVG-aktiver med let tekstur erstatter de gamle symboler; ingen nye eksterne billedkilder.
+## Tilføjet validering — v0.4.0
+
+- Produktionsbygningen og seks automatiske tests bestod.
+- Test af ovnens grænser ved 6, 13 og 18 sekunder og betaling for rigtig/forkert/rå/brændt pizza.
+- Browser: egen pizza vises i ovnen; bagning, advarsel, brændt pizza, udtagning og to pizzaer på disken afprøvet.
+- Forkert kunde afviser uden betaling og beholder pizzaen på disken.
+- Rigtig Loui-bestilling gav 10 mønter; rigtig Willa-bestilling gav yderligere 10. Brændt pizza gav ingen mønter.
+- Efter Willa fik sin pizza blev kun Willa erstattet, mens de andre kunder ventede videre.
+- Saldo på 20 mønter og stjerner blev bevaret efter genindlæsning.
+- Touch på fysisk enhed og forskellige browserstemmer er ikke afprøvet.
+
+Live-spillet er ikke opdateret af denne levering. Versionsnummer 0.4.0 vises på forsiden efter installation af den nye udgave.

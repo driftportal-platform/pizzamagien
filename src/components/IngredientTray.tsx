@@ -1,4 +1,4 @@
-import {IngredientArt} from "./IngredientArt";
+import { IngredientArt } from "./IngredientArt";
 import { useRef, useState } from "react";
 import type { IngredientId } from "../types/game";
 import { ingredients } from "../data/ingredients";
@@ -80,7 +80,7 @@ export function IngredientTray({
               }}
             >
               <span className="ingredient-emoji" aria-hidden="true">
-                <IngredientArt id={i.id}/>
+                <IngredientArt id={i.id} />
               </span>
               <span>{i.name}</span>
             </button>
@@ -92,7 +92,7 @@ export function IngredientTray({
           style={{ left: ghost.x, top: ghost.y }}
           aria-hidden="true"
         >
-          <IngredientArt id={ghost.id}/>
+          <IngredientArt id={ghost.id} />
         </div>
       )}
     </>

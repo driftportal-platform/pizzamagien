@@ -1,5 +1,5 @@
 export type Mode = "free" | "orders";
-export type Stage = "make" | "bake" | "serve";
+export type Stage = "make" | "bake" | "counter";
 export type IngredientId =
   | "cheese"
   | "ham"

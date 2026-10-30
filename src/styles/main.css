@@ -710,7 +710,363 @@ progress {
   height: 11%;
 }
 /* Food illustrations have their own shape and transparent surroundings. */
-.topping{width:11%;height:11%;background:transparent!important;border:0!important;border-radius:0;box-shadow:none;overflow:visible;filter:drop-shadow(1px 2px 1px #68402c55)}
-.topping-cheese{width:15%;height:15%}.topping-ham{width:13%;height:13%}.topping-corn{width:5.5%;height:5.5%}.topping-olive{width:8%;height:8%}.topping-pineapple{width:9%;height:9%}.topping-pepper{width:12%;height:12%}
-.ingredient-art{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}.ingredient-emoji{display:grid;place-items:center;width:48px;height:44px}.request-items .ingredient-art{width:36px;height:36px}.drag-ghost{width:60px;height:60px}.baked .topping .ingredient-art{filter:sepia(.13) saturate(1.12) brightness(.94)}.baked .topping-cheese{filter:drop-shadow(0 1px 1px #b8792a88);transform-origin:center}.silly-topping{filter:drop-shadow(1px 2px 1px #68402c44)}
-@media(max-width:580px){.ingredient-emoji{width:38px;height:34px}.request-items .ingredient-art{width:28px;height:28px}}
+.topping {
+  width: 11%;
+  height: 11%;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+  filter: drop-shadow(1px 2px 1px #68402c55);
+}
+.topping-cheese {
+  width: 15%;
+  height: 15%;
+}
+.topping-ham {
+  width: 13%;
+  height: 13%;
+}
+.topping-corn {
+  width: 5.5%;
+  height: 5.5%;
+}
+.topping-olive {
+  width: 8%;
+  height: 8%;
+}
+.topping-pineapple {
+  width: 9%;
+  height: 9%;
+}
+.topping-pepper {
+  width: 12%;
+  height: 12%;
+}
+.ingredient-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+.ingredient-emoji {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 44px;
+}
+.request-items .ingredient-art {
+  width: 36px;
+  height: 36px;
+}
+.drag-ghost {
+  width: 60px;
+  height: 60px;
+}
+.baked .topping .ingredient-art {
+  filter: sepia(0.13) saturate(1.12) brightness(0.94);
+}
+.baked .topping-cheese {
+  filter: drop-shadow(0 1px 1px #b8792a88);
+  transform-origin: center;
+}
+.silly-topping {
+  filter: drop-shadow(1px 2px 1px #68402c44);
+}
+@media (max-width: 580px) {
+  .ingredient-emoji {
+    width: 38px;
+    height: 34px;
+  }
+  .request-items .ingredient-art {
+    width: 28px;
+    height: 28px;
+  }
+}
+.wallet {
+  display: inline-block;
+  font-size: 18px;
+  background: #fff0b9;
+  color: #82591c;
+  border-radius: 20px;
+  padding: 6px 12px;
+  margin-left: 10px;
+}
+.version-label {
+  text-align: center;
+  color: #936e52;
+}
+.speech-button {
+  border: 0;
+  font: inherit;
+  width: 100%;
+}
+.working-oven {
+  width: 100%;
+  max-width: 560px;
+  border: 10px solid #b8503b;
+  border-radius: 32px;
+  padding: 16px;
+  background: #e87e58;
+  text-align: center;
+  color: #fff9e5;
+  box-shadow: 0 9px #7c3b30;
+  margin: 16px 0;
+}
+.oven-top {
+  font-weight: 900;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+.baking-window {
+  position: relative;
+  border: 9px solid #f7c28c;
+  border-radius: 24px;
+  background: radial-gradient(ellipse at bottom, #f4a43c, #492c29 75%);
+  overflow: hidden;
+  min-height: 230px;
+  display: grid;
+  place-items: center;
+}
+.oven-food {
+  width: 75%;
+  position: relative;
+  z-index: 1;
+  transform: perspective(550px) rotateX(35deg);
+  transform-origin: center;
+}
+.oven-food .pizza {
+  width: 100%;
+  margin: 0;
+  filter: none;
+}
+.oven-embers {
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  font-size: 30px;
+  animation: flicker 0.6s infinite alternate;
+}
+.oven-smoke {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  font-size: 70px;
+  animation: bob 1s infinite alternate;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.bake-gauge {
+  height: 14px;
+  background: linear-gradient(
+    to right,
+    #f2d766 0 33.3%,
+    #8ac05b 33.3% 72.2%,
+    #ec913e 72.2% 99%,
+    #39322d 99%
+  );
+  border-radius: 12px;
+  position: relative;
+  margin-top: 20px;
+}
+.bake-gauge span {
+  position: absolute;
+  top: -17px;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 22px;
+}
+.bake-status {
+  font-size: 24px;
+  font-weight: 900;
+  margin: 18px 0 5px;
+}
+.working-oven small {
+  display: block;
+  margin-top: 15px;
+}
+.working-oven .primary-btn {
+  background: #fff4d4;
+  color: #854832;
+  min-height: 55px;
+}
+.cook-ready > .pizza,
+.cook-warning > .pizza {
+  filter: sepia(0.25) saturate(1.3) brightness(0.91);
+}
+.cook-warning > .pizza {
+  filter: sepia(0.5) saturate(1.5) brightness(0.76);
+}
+.cook-burnt > .pizza {
+  filter: grayscale(0.7) sepia(0.5) brightness(0.26);
+}
+.oven-food.cook-raw .pizza {
+  animation: golden 6s linear forwards;
+}
+.oven-warning {
+  border-color: #db6a27;
+}
+.oven-burnt {
+  border-color: #59453e;
+}
+.serving-counter {
+  max-width: 1200px;
+  margin: 22px auto;
+  padding: 24px;
+  background: #fffaf0;
+  border: 6px solid white;
+  border-radius: 30px;
+  box-shadow: 0 10px #b87b4e;
+  text-align: center;
+}
+.serving-counter h2 {
+  font-size: 32px;
+  margin: 0 0 10px;
+}
+.pizza-shelf {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    0deg,
+    #dca575,
+    #dca575 10px,
+    #daa16f 11px,
+    #daa16f 20px
+  );
+  border-radius: 20px;
+  padding: 18px;
+  min-height: 80px;
+}
+.pizza-plate {
+  border: 4px solid transparent;
+  border-radius: 20px;
+  background: #fff4de;
+  padding: 10px;
+  flex: 0 1 200px;
+  color: #643d31;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pizza-plate[aria-pressed="true"] {
+  border-color: #6d9f53;
+  background: #eef5dc;
+}
+.pizza-plate .pizza {
+  width: 145px;
+  margin: 3px;
+  pointer-events: none;
+}
+.pizza-plate small {
+  margin-top: 5px;
+}
+.waiting-customers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 20px 0;
+}
+.customer-ticket {
+  border: 3px solid #efcfaa;
+  background: #fff1d4;
+  border-radius: 24px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  color: #643d31;
+  min-height: 180px;
+}
+.customer-ticket:disabled {
+  opacity: 0.7;
+}
+.ticket-face {
+  font-size: 48px;
+}
+.ticket-recipe {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+.ticket-recipe .ingredient-art {
+  width: 40px;
+  height: 40px;
+}
+.counter-message {
+  font-size: 19px;
+  font-weight: 800;
+  color: #906238;
+  padding: 16px;
+  min-height: 65px;
+}
+.counter-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.serving-counter > p {
+  font-weight: 700;
+}
+.workstation .working-oven p {
+  font-weight: 800;
+}
+@keyframes golden {
+  from {
+    filter: brightness(1.12) saturate(0.8);
+  }
+  to {
+    filter: sepia(0.25) saturate(1.3) brightness(0.91);
+  }
+}
+@media (max-width: 580px) {
+  .serving-counter {
+    margin: 10px;
+    padding: 12px;
+  }
+  .waiting-customers {
+    gap: 6px;
+  }
+  .customer-ticket {
+    padding: 8px 3px;
+    font-size: 12px;
+  }
+  .ticket-recipe {
+    flex-wrap: wrap;
+  }
+  .ticket-recipe .ingredient-art {
+    width: 26px;
+    height: 26px;
+  }
+  .pizza-plate {
+    flex-basis: 44%;
+    padding: 5px;
+  }
+  .pizza-plate .pizza {
+    width: 110px;
+  }
+  .wallet {
+    font-size: 13px;
+    margin-left: 3px;
+    padding: 5px;
+  }
+  .working-oven {
+    padding: 10px;
+    border-width: 7px;
+  }
+  .baking-window {
+    min-height: 190px;
+  }
+  .oven-top {
+    font-size: 13px;
+  }
+}

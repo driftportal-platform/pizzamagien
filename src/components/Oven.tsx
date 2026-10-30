@@ -1,33 +1,79 @@
-import { useEffect, useState } from "react";
-export function Oven({ onReady }: { onReady: () => void }) {
+import { useEffect, useRef, useState } from "react";
+import { Pizza } from "./Pizza";
+import { bakeState, bakeLabels } from "../game/baking";
+import type { BakeState } from "../game/baking";
+import type { Topping } from "../types/game";
+export function Oven({
+  toppings,
+  onTake,
+}: {
+  toppings: Topping[];
+  onTake: (state: BakeState) => void;
+}) {
+  const started = useRef(Date.now());
+  const taken = useRef(false);
   const [seconds, setSeconds] = useState(0);
   useEffect(() => {
     const timer = window.setInterval(
-      () => setSeconds((s) => Math.min(5, s + 1)),
-      1000,
+      () => setSeconds((Date.now() - started.current) / 1000),
+      100,
     );
     return () => window.clearInterval(timer);
   }, []);
-  const ready = seconds === 5;
+  const state = bakeState(seconds);
   return (
-    <div className="stage-action">
-      <div className={`magic-oven ${ready ? "ready" : ""}`} aria-hidden="true">
-        <div className="oven-knobs">● ● ●</div>
-        <div className="oven-window">
-          <span className="oven-pizza">🍕</span>
-          <span className="flames">🔥 🔥 🔥</span>
-        </div>
+    <section className={`working-oven oven-${state}`} aria-label="Pizzaovn">
+      <div className="oven-top">
+        🔥 PizzaMagien stenovn <span>● ●</span>
       </div>
-      <h2>{ready ? "Ding! Pizzaen er klar!" : "Nu bager vi!"}</h2>
-      <progress max={5} value={seconds} aria-label="Bagetid" />
-      <p role="status">
-        {ready
-          ? "Tid til at servere!"
-          : `Pizzaen hygger sig i ovnen … ${5 - seconds}`}
+      <div className="baking-window">
+        <div className={`oven-food cook-${state}`}>
+          <Pizza
+            toppings={toppings}
+            selected={null}
+            onPlace={() => {}}
+            onDraw={() => {}}
+            baked={state !== "raw"}
+            interactive={false}
+          />
+        </div>
+        <div className="oven-embers" aria-hidden="true">
+          🔥 🔥 🔥 🔥
+        </div>
+        {state === "burnt" && (
+          <div className="oven-smoke" aria-hidden="true">
+            ☁️ ☁️
+          </div>
+        )}
+      </div>
+      <div className="bake-gauge">
+        <span style={{ left: `${Math.min(seconds / 18, 1) * 100}%` }}>▼</span>
+      </div>
+      <p role="status" className="bake-status">
+        {bakeLabels[state]}
       </p>
-      <button className="primary-btn" disabled={!ready} onClick={onReady}>
-        🔔 Server pizza
+      <p>
+        {state === "raw"
+          ? "Klar efter 6 sekunder. Hold øje med farven!"
+          : state === "ready"
+            ? "Mums! Nu er det et godt tidspunkt."
+            : state === "warning"
+              ? "Skynd dig, før pizzaen brænder på!"
+              : "Pyt! Vi kan altid lave en ny pizza."}
+      </p>
+      <button
+        className="primary-btn"
+        onClick={() => {
+          if (taken.current) return;
+          taken.current = true;
+          onTake(bakeState((Date.now() - started.current) / 1000));
+        }}
+      >
+        🧤 Tag pizzaen ud
       </button>
-    </div>
+      <small>
+        Pizzaen brænder på efter 18 sekunder — også hvis du skifter fane.
+      </small>
+    </section>
   );
 }

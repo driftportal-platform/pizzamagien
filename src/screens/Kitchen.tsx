@@ -1,52 +1,55 @@
-import {IngredientArt} from "../components/IngredientArt";
-import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  RotateCcw,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Chef } from "../components/Chef";
-import { Oven } from "../components/Oven";
-import { dropPosition } from "../game/logic";
 import { Pizza } from "../components/Pizza";
+import { Oven } from "../components/Oven";
+import { Counter } from "../components/Counter";
+import type { BakedPizza } from "../components/Counter";
 import { IngredientTray } from "../components/IngredientTray";
-import { ingredients } from "../data/ingredients";
+import { IngredientArt } from "../components/IngredientArt";
 import { orders } from "../data/orders";
-import { evaluateOrder, randomId } from "../game/logic";
-import type { IngredientId, Mode, Stage, Topping } from "../types/game";
+import { ingredients } from "../data/ingredients";
+import { dropPosition, randomId } from "../game/logic";
+import { salePrice } from "../game/baking";
+import type { BakeState } from "../game/baking";
+import type { IngredientId, Mode, Topping } from "../types/game";
 export function Kitchen({
   mode,
   onExit,
   onAward,
+  coins,
+  onEarn,
 }: {
   mode: Mode;
   onExit: () => void;
   onAward: (n: number) => void;
+  coins: number;
+  onEarn: (n: number) => void;
 }) {
   const [chef, setChef] = useState<"Aya" | "Fraya">("Aya");
+  const [stage, setStage] = useState<"make" | "bake" | "counter">("make");
+  const [category, setCategory] = useState<"normal" | "silly">("normal");
+  const [selected, setSelected] = useState<IngredientId | null>("sauce");
+  const [toppings, setToppings] = useState<Topping[]>([]);
+  const [shelf, setShelf] = useState<BakedPizza[]>([]);
+  const [plate, setPlate] = useState<string | null>(null);
+  const [customerIds, setCustomerIds] = useState([0, 1, 2]);
+  const [sound, setSound] = useState(true);
+  const [message, setMessage] = useState("");
+  const removed = useRef(new Set<string>());
+  const customers = customerIds.map((i) => orders[i]);
+  const order = customers[0];
   useEffect(
     () => () => {
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     },
     [],
   );
-  const [category, setCategory] = useState<"normal" | "silly">("normal");
-  const [stage, setStage] = useState<Stage>("make");
-  const [selected, setSelected] = useState<IngredientId | null>("sauce");
-  const [toppings, setToppings] = useState<Topping[]>([]);
-  const [orderIndex, setOrderIndex] = useState(0);
-  const [sound, setSound] = useState(true);
-  const [result, setResult] = useState<number | null>(null);
-  const order = orders[orderIndex % orders.length];
-  const speak = (message: string) => {
+  const speak = () => {
     if (!sound || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(message);
-    utterance.lang = "da-DK";
-    utterance.rate = 0.88;
-    window.speechSynthesis.speak(utterance);
+    const u = new SpeechSynthesisUtterance(order.message);
+    u.lang = "da-DK";
+    window.speechSynthesis.speak(u);
   };
   const place = (ingredient: IngredientId, x: number, y: number) => {
     if (stage !== "make") return;
@@ -83,32 +86,73 @@ export function Kitchen({
           ],
     );
   };
-  const add = (x: number, y: number) => {
-    if (selected) place(selected, x, y);
-  };
   const drop = (id: IngredientId, x: number, y: number) => {
     const el = document.querySelector("[data-pizza]");
     if (!el) return;
-    const point = dropPosition(x, y, el.getBoundingClientRect());
-    if (point) place(id, point.x, point.y);
+    const p = dropPosition(x, y, el.getBoundingClientRect());
+    if (p) place(id, p.x, p.y);
   };
-  const reset = () => {
+  const make = () => {
     setToppings([]);
-    setStage("make");
-    setResult(null);
     setSelected("sauce");
+    setStage("make");
+    setMessage("");
   };
-  const serve = () => {
-    if (mode === "orders") {
-      const stars = evaluateOrder(toppings, order.request);
-      setResult(stars);
-      onAward(stars);
-    } else setResult(3);
-    setStage("serve");
+  const take = (state: BakeState) => {
+    const id = randomId();
+    setShelf((old) => [...old, { id, toppings: [...toppings], state }]);
+    setPlate(id);
+    setStage("counter");
+    setMessage(
+      state === "burnt"
+        ? "Pizzaen blev brændt. Fjern den og prøv igen."
+        : state === "raw"
+          ? "Pizzaen kom for tidligt ud. Kunden betaler kun for en bagt pizza."
+          : "Pizzaen er klar på disken!",
+    );
   };
-  const next = () => {
-    setOrderIndex((i) => i + 1);
-    reset();
+  const remove = (id: string) => {
+    removed.current.add(id);
+    const rest = shelf.filter((p) => p.id !== id);
+    setShelf(rest);
+    setPlate(rest[0]?.id ?? null);
+  };
+  const serve = (index: number) => {
+    const p = shelf.find((p) => p.id === plate);
+    if (!p || removed.current.has(p.id)) return;
+    if (mode === "free") {
+      remove(p.id);
+      setMessage("Mums! Klar til en ny pizzamagi?");
+      return;
+    }
+    const customer = customers[index];
+    const price = salePrice(p.toppings, customer.request, p.state);
+    if (!price) {
+      setMessage(
+        p.state === "burnt"
+          ? "Kunden vil ikke have en brændt pizza. Lav en ny!"
+          : p.state === "raw"
+            ? "Pizzaen er ikke færdigbagt. Prøv igen med en ny pizza."
+            : `${customer.name} siger: Det var ikke min bestilling. Prøv en anden kunde eller lav en ny pizza.`,
+      );
+      return;
+    }
+    remove(p.id);
+    onEarn(price);
+    onAward(3);
+    setCustomerIds((ids) =>
+      ids.map((id, slot) =>
+        slot !== index
+          ? id
+          : (Array.from(
+              { length: orders.length },
+              (_, offset) => (id + offset + 1) % orders.length,
+            ).find((candidate) => !ids.includes(candidate)) ?? id),
+      ),
+    );
+    setMessage(
+      `${customer.name}: Mums, lige min pizza! +${price} mønter og 3 stjerner!`,
+    );
   };
   return (
     <main className="game-screen">
@@ -118,10 +162,13 @@ export function Kitchen({
           onClick={onExit}
           aria-label="Tilbage til start"
         >
-          <ArrowLeft />
+          ←
         </button>
         <div className="game-title">
-          🍕 {mode === "free" ? "Fri leg" : "Mit pizzeria"}
+          🍕 {mode === "free" ? "Fri leg" : "Mit pizzeria"}{" "}
+          <span className="wallet" aria-label={`Penge: ${coins} mønter`}>
+            🪙 {coins}
+          </span>
         </div>
         <button
           className="round-button"
@@ -132,170 +179,172 @@ export function Kitchen({
           }}
           aria-label={sound ? "Slå lyd fra" : "Slå lyd til"}
         >
-          {sound ? <Volume2 /> : <VolumeX />}
+          {sound ? "🔊" : "🔇"}
         </button>
       </header>
-      <div className="game-main">
-        <section className="customer-panel">
-          <Chef name={chef} />
-          <div className="chef-switch" aria-label="Vælg kok">
-            {(["Aya", "Fraya"] as const).map((name) => (
-              <button
-                key={name}
-                aria-pressed={chef === name}
-                onClick={() => setChef(name)}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
-          {mode === "orders" ? (
-            <>
-              <div className="customer-face">{order.emoji}</div>
-              <h2>{order.name}</h2>
-              <div
-                className="speech"
-                onClick={() => speak(order.message)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") speak(order.message);
-                }}
-              >
-                {order.message} 🔊
-              </div>
-              <div className="request-items">
-                {order.request.map((i) => (
-                  <span
-                    key={i}
-                    title={ingredients.find((a) => a.id === i)?.name}
-                  >
-                    <IngredientArt id={i}/>
-                  </span>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="customer-face">👩‍🍳</div>
-              <h2>Din pizzamagi!</h2>
-              <p>Træk fyld på pizzaen, eller vælg og tryk. Du bestemmer!</p>
-              <div className="sparkle">✨ 🌈 ✨</div>
-            </>
-          )}
-        </section>
-        <section className="workstation">
-          <div className="step-label">
-            {stage === "make"
-              ? "1 · PYNT DIN PIZZA"
-              : stage === "bake"
-                ? "2 · BAG DIN PIZZA"
-                : "3 · SERVER DIN PIZZA"}
-          </div>
-          <Pizza
-            toppings={toppings}
-            selected={stage === "make" ? selected : null}
-            onPlace={add}
-            onDraw={draw}
-            baked={stage !== "make"}
-            interactive={stage === "make"}
-          />
-          {stage === "make" ? (
-            <p className="hint">
-              {selected === "sauce"
-                ? "🍅 Tegn med fingeren på pizzaen!"
-                : "👆 Træk dit fyld, eller vælg og tryk på pizzaen"}
-            </p>
-          ) : stage === "bake" ? (
-            <p className="hint">🔥 Mmm! Pizzaen er i ovnen!</p>
-          ) : (
-            <div className="celebrate" role="status">
-              🎉{" "}
-              {mode === "orders"
-                ? `Du fik ${result} ${result === 1 ? "stjerne" : "stjerner"}!`
-                : "Sikke en flot pizza!"}
+      {stage === "counter" ? (
+        <Counter
+          pizzas={shelf}
+          selected={plate}
+          onSelect={setPlate}
+          customers={customers}
+          onServe={serve}
+          onDiscard={() => {
+            if (plate) remove(plate);
+            setMessage("Der er plads til en ny pizza!");
+          }}
+          onMake={make}
+          free={mode === "free"}
+          message={message}
+        />
+      ) : (
+        <div className="game-main">
+          <section className="customer-panel">
+            <Chef name={chef} />
+            <div className="chef-switch">
+              {(["Aya", "Fraya"] as const).map((name) => (
+                <button
+                  key={name}
+                  aria-pressed={chef === name}
+                  onClick={() => setChef(name)}
+                >
+                  {name}
+                </button>
+              ))}
             </div>
-          )}
-        </section>
-        <section className="action-panel">
-          {stage === "make" ? (
-            <>
-              <h2>Vælg dit fyld</h2>
+            {mode === "orders" ? (
+              <>
+                <div className="customer-face">{order.emoji}</div>
+                <h2>{order.name}</h2>
+                <button className="speech speech-button" onClick={speak}>
+                  {order.message} 🔊
+                </button>
+                <div className="request-items">
+                  {order.request.map((id) => (
+                    <span
+                      key={id}
+                      title={ingredients.find((i) => i.id === id)?.name}
+                    >
+                      <IngredientArt id={id} />
+                    </span>
+                  ))}
+                </div>
+                <p>Rigtig, bagt pizza giver 🪙 10</p>
+              </>
+            ) : (
+              <>
+                <h2>Din pizzamagi!</h2>
+                <p>Tegn sovs, pynt og bag. Husk at tage pizzaen ud!</p>
+              </>
+            )}
+            {stage === "make" && (
               <button
-                className="sauce-tool"
-                aria-pressed={selected === "sauce"}
-                onClick={() => setSelected("sauce")}
+                className="secondary-btn"
+                onClick={() => setStage("counter")}
               >
-                🍅 Tegn med tomatsovs
+                Se kunder og disk ({shelf.length})
               </button>
-              <div className="filling-tabs" aria-label="Vælg slags fyld">
+            )}
+          </section>
+          <section className="workstation">
+            <div className="step-label">
+              {stage === "make"
+                ? "1 · LAV DIN PIZZA"
+                : "2 · HOLD ØJE MED OVNEN"}
+            </div>
+            {stage === "bake" ? (
+              <Oven toppings={toppings} onTake={take} />
+            ) : (
+              <>
+                <Pizza
+                  toppings={toppings}
+                  selected={selected}
+                  onPlace={(x, y) => {
+                    if (selected) place(selected, x, y);
+                  }}
+                  onDraw={draw}
+                  baked={false}
+                  interactive
+                />
+                <p className="hint">
+                  {selected === "sauce"
+                    ? "🍅 Tegn med fingeren på pizzaen!"
+                    : "👆 Træk fyld, eller vælg og tryk på pizzaen"}
+                </p>
+              </>
+            )}
+          </section>
+          <section className="action-panel">
+            {stage === "make" ? (
+              <>
+                <h2>Vælg dit fyld</h2>
                 <button
-                  aria-pressed={category === "normal"}
-                  onClick={() => setCategory("normal")}
+                  className="sauce-tool"
+                  aria-pressed={selected === "sauce"}
+                  onClick={() => setSelected("sauce")}
                 >
-                  🧀 Klassisk fyld
+                  🍅 Tegn med tomatsovs
                 </button>
+                <div className="filling-tabs">
+                  <button
+                    aria-pressed={category === "normal"}
+                    onClick={() => setCategory("normal")}
+                  >
+                    🧀 Klassisk fyld
+                  </button>
+                  <button
+                    aria-pressed={category === "silly"}
+                    onClick={() => setCategory("silly")}
+                  >
+                    🌈 Skørt fyld
+                  </button>
+                </div>
+                <IngredientTray
+                  category={category}
+                  selected={selected}
+                  onSelect={setSelected}
+                  onDrop={drop}
+                />
+                <div className="actions-row">
+                  <button
+                    className="secondary-btn"
+                    disabled={!toppings.length}
+                    onClick={() => setToppings((old) => old.slice(0, -1))}
+                  >
+                    ↩ Fortryd
+                  </button>
+                  <button
+                    className="primary-btn"
+                    disabled={shelf.length >= 4}
+                    onClick={() => setStage("bake")}
+                  >
+                    🔥 Sæt pizzaen i ovnen
+                  </button>
+                </div>
                 <button
-                  aria-pressed={category === "silly"}
-                  onClick={() => setCategory("silly")}
-                >
-                  🌈 Skørt fyld
-                </button>
-              </div>
-              <IngredientTray
-                category={category}
-                selected={selected}
-                onSelect={setSelected}
-                onDrop={drop}
-              />
-              <div className="actions-row">
-                <button
-                  className="secondary-btn"
-                  onClick={() => setToppings((old) => old.slice(0, -1))}
-                  disabled={!toppings.length}
-                >
-                  ↩ Fortryd
-                </button>
-                <button
-                  className="primary-btn"
+                  className="reset-btn"
                   onClick={() => {
-                    setStage("bake");
-                    setSelected(null);
+                    setToppings([]);
+                    setSelected("sauce");
                   }}
                 >
-                  Til ovnen <ArrowRight size={18} />
+                  Start forfra
                 </button>
+              </>
+            ) : (
+              <div className="stage-action">
+                <h2>🧤 Husk din pizza!</h2>
+                <p>Se den blive bagt i ovnen.</p>
+                <p>🟡 Før 6 sek.: ikke færdig</p>
+                <p>🟢 6–12 sek.: gylden og klar</p>
+                <p>🟠 13–17 sek.: tag den ud nu!</p>
+                <p>⚫ Efter 18 sek.: brændt på</p>
+                <p>Tryk “Tag pizzaen ud”, og læg den på disken.</p>
               </div>
-            </>
-          ) : stage === "bake" ? (
-            <Oven onReady={serve} />
-          ) : (
-            <div className="stage-action">
-              <div className="big-stars">
-                {mode === "orders" ? "⭐".repeat(result || 1) : "🥳🍕🎈"}
-              </div>
-              <h2>Velbekomme!</h2>
-              <p>
-                {mode === "orders"
-                  ? "Kunden siger tusind tak!"
-                  : "Du er en fantastisk pizzakok!"}
-              </p>
-              <button
-                className="primary-btn"
-                onClick={mode === "orders" ? next : reset}
-              >
-                {mode === "orders" ? "Næste kunde" : "Lav en ny pizza"}{" "}
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          )}
-          {stage === "make" && (
-            <button className="reset-btn" onClick={reset}>
-              <RotateCcw size={15} /> Start forfra
-            </button>
-          )}
-        </section>
-      </div>
+            )}
+          </section>
+        </div>
+      )}
     </main>
   );
 }

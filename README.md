@@ -1,4 +1,4 @@
-# PizzaMagien 🍕 v0.3.1
+# PizzaMagien 🍕 v0.4.0
 
 Et hyggeligt dansk pizzaspil til børn. Bygget med React, TypeScript og Vite.
 
@@ -25,8 +25,11 @@ Vælg **Skørt fyld** for slik, regnbuer, popcorn, jordbær, broccoli og is. Bå
 - Træk en ingrediens til pizzaen med finger, mus eller pen. Slip udenfor pizzaen for at annullere.
 - Du kan også vælge en ingrediens og trykke på pizzaen. Med tastatur: vælg fyld, fokuser pizzaen og tryk Enter eller mellemrum.
 - Fortryd fjerner seneste topping. Start forfra rydder pizzaen. Der er plads til 100 toppings.
-- Vælg Til ovnen, vent fem sekunder og server. I pizzeriaet giver den præcise opskrift tre stjerner; alle forsøg får mindst én.
-- Vælg Næste kunde eller lav en ny pizza. Stjerner gemmes lokalt i denne browser.
+- Sæt pizzaen i ovnen og se din egen pizza blive gylden. Tag den ud efter 6–17 sekunder. Fra 13 sekunder vises en advarsel; efter 18 sekunder brænder den på. Tiden fortsætter, hvis fanen skjules. Du kan også tage den ud for tidligt.
+- På pizzadisken kan der stå fire pizzaer. Vælg en pizza og derefter den kunde, der skal have den.
+- En præcis bestilling, bagt uden at brænde på, giver 10 legemønter og tre stjerner. Rå, brændte eller forkerte pizzaer giver ingen betaling. Forkert servering beholder pizzaen på disken, så du kan vælge en anden kunde.
+- Servér eller fjern en pizza, hvis disken er fuld. I Fri leg kan du spise pizzaerne uden betaling.
+- Kunden erstattes efter en vellykket servering. Mønter og stjerner gemmes lokalt i denne browser. Pizzaer på disken og ufærdige pizzaer gemmes kun, mens køkkenet er åbent.
 - Lydknappen styrer oplæsning af bestillingen; tryk på taleboblen for at høre den. Dansk stemme afhænger af browser og enhed.
 
 ## Struktur og billeder
@@ -34,6 +37,8 @@ Vælg **Skørt fyld** for slik, regnbuer, popcorn, jordbær, broccoli og is. Bå
 `src/components/` indeholder pizza, ingrediensbakke, kok og ovn. `src/screens/` indeholder start og køkken. `src/data/` indeholder ingredienser og bestillinger. `src/game/logic.ts` indeholder spilleregler. `src/assets.ts` samler billedstier og toppingikoner; ingrediensikoner findes i `src/data/ingredients.ts`.
 
 Den eksisterende illustration i `public/assets/characters/familie-og-dyr.png` er bevaret og bruges også til kokkenes portrætter. De oprindelige fotos var ikke tilgængelige. Navnene Aya og Fraya bruges til valg af kok; sammenhængen mellem portrætter og navne kan justeres i Chef.tsx. Dyrekunder vises med emoji, som kan se forskellige ud på forskellige enheder. Ingen nye foto-baserede billeder er genereret.
+
+Mønterne er kun legepenge. Der er ingen køb eller rigtige betalinger.
 
 Ingen eksterne skrifttyper, analyseværktøjer eller konti. Spillet kræver ingen backend. Afhængigheder hentes ved installation; selve spillet bruger lokale aktiver. Det er ikke en offline-installerbar PWA.
 
