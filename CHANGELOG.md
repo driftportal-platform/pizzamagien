@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.1 — 2026-10-30
+- Otte nye teksturerede SVG-illustrationer: revet ost, skinkestrimler, pepperoni, majskerne, ananas, champignonskive, peberfrugtring og olivenring.
+- Samme illustrationer bruges i bakken, under træk, på bestillinger og på pizzaen.
+- Fyldet får naturlige former, highlights, skygger og let brunede farver efter bagning.
+
+
+## 0.3.0 — 2026-10-30
+- Start med bar pizzadej og tegn tomatsovs med finger, pen eller mus.
+- Sovsen ligger under fyldet og bliver på pizzaen under bagning.
+- Hver sovsestreg kan fortrydes som én handling.
+- Skift mellem klassisk og skørt fyld: slik, regnbue, popcorn, jordbær, broccoli og is.
+- Sovs er valgfrit og ændrer ikke kundens stjernebedømmelse.
+
+
 ## 0.2.0 — 2026-10-30
 - Touch-, pen- og musetræk med forhåndsvisning og sikker dropzone.
 - Bevarer tryk-for-at-placere og tilføjer tastaturplacering.

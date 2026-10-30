@@ -1,3 +1,4 @@
+import {IngredientArt} from "../components/IngredientArt";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -31,8 +32,9 @@ export function Kitchen({
     },
     [],
   );
+  const [category, setCategory] = useState<"normal" | "silly">("normal");
   const [stage, setStage] = useState<Stage>("make");
-  const [selected, setSelected] = useState<IngredientId | null>("cheese");
+  const [selected, setSelected] = useState<IngredientId | null>("sauce");
   const [toppings, setToppings] = useState<Topping[]>([]);
   const [orderIndex, setOrderIndex] = useState(0);
   const [sound, setSound] = useState(true);
@@ -63,6 +65,24 @@ export function Kitchen({
           ],
     );
   };
+  const draw = (points: { x: number; y: number }[]) => {
+    if (stage !== "make" || !points.length) return;
+    setToppings((old) =>
+      old.length >= 100
+        ? old
+        : [
+            ...old,
+            {
+              id: randomId(),
+              ingredient: "sauce",
+              x: points[0].x,
+              y: points[0].y,
+              rotation: 0,
+              points,
+            },
+          ],
+    );
+  };
   const add = (x: number, y: number) => {
     if (selected) place(selected, x, y);
   };
@@ -76,7 +96,7 @@ export function Kitchen({
     setToppings([]);
     setStage("make");
     setResult(null);
-    setSelected("cheese");
+    setSelected("sauce");
   };
   const serve = () => {
     if (mode === "orders") {
@@ -150,7 +170,7 @@ export function Kitchen({
                     key={i}
                     title={ingredients.find((a) => a.id === i)?.name}
                   >
-                    {ingredients.find((a) => a.id === i)?.emoji}
+                    <IngredientArt id={i}/>
                   </span>
                 ))}
               </div>
@@ -176,12 +196,15 @@ export function Kitchen({
             toppings={toppings}
             selected={stage === "make" ? selected : null}
             onPlace={add}
+            onDraw={draw}
             baked={stage !== "make"}
             interactive={stage === "make"}
           />
           {stage === "make" ? (
             <p className="hint">
-              👆 Træk dit fyld, eller vælg og tryk på pizzaen
+              {selected === "sauce"
+                ? "🍅 Tegn med fingeren på pizzaen!"
+                : "👆 Træk dit fyld, eller vælg og tryk på pizzaen"}
             </p>
           ) : stage === "bake" ? (
             <p className="hint">🔥 Mmm! Pizzaen er i ovnen!</p>
@@ -198,7 +221,29 @@ export function Kitchen({
           {stage === "make" ? (
             <>
               <h2>Vælg dit fyld</h2>
+              <button
+                className="sauce-tool"
+                aria-pressed={selected === "sauce"}
+                onClick={() => setSelected("sauce")}
+              >
+                🍅 Tegn med tomatsovs
+              </button>
+              <div className="filling-tabs" aria-label="Vælg slags fyld">
+                <button
+                  aria-pressed={category === "normal"}
+                  onClick={() => setCategory("normal")}
+                >
+                  🧀 Klassisk fyld
+                </button>
+                <button
+                  aria-pressed={category === "silly"}
+                  onClick={() => setCategory("silly")}
+                >
+                  🌈 Skørt fyld
+                </button>
+              </div>
               <IngredientTray
+                category={category}
                 selected={selected}
                 onSelect={setSelected}
                 onDrop={drop}

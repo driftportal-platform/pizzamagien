@@ -31,3 +31,13 @@ test("Drops use viewport coordinates and reject crust and outside areas", () => 
   assert.equal(dropPosition(700, 400, r), null);
   assert.equal(dropPosition(300, 400, { ...r, width: 0 }), null);
 });
+test("Tomatsovs ændrer ikke kundens bestilling, skørt fyld tæller som ekstra", () => {
+  assert.equal(
+    evaluateOrder(pizza(["cheese", "ham", "sauce"]), ["cheese", "ham"]),
+    3,
+  );
+  assert.equal(
+    evaluateOrder(pizza(["cheese", "ham", "rainbow"]), ["cheese", "ham"]),
+    2,
+  );
+});

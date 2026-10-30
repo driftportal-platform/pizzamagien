@@ -8,13 +8,21 @@ export type IngredientId =
   | "pineapple"
   | "mushroom"
   | "pepper"
-  | "olive";
+  | "olive"
+  | "sauce"
+  | "candy"
+  | "rainbow"
+  | "popcorn"
+  | "strawberry"
+  | "broccoli"
+  | "icecream";
 export type Topping = {
   id: string;
   ingredient: IngredientId;
   x: number;
   y: number;
   rotation: number;
+  points?: { x: number; y: number }[];
 };
 export type Order = {
   name: string;

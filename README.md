@@ -1,4 +1,4 @@
-# PizzaMagien 🍕 v0.2.0
+# PizzaMagien 🍕 v0.3.1
 
 Et hyggeligt dansk pizzaspil til børn. Bygget med React, TypeScript og Vite.
 
@@ -12,6 +12,12 @@ npm run dev
 ```
 
 Åbn adressen i terminalen. `npm run build` kontrollerer TypeScript og bygger til `dist/`. `npm run preview` viser den byggede udgave lokalt. `npm test` tester bestillinger og koordinater for træk og slip.
+
+## Nyt: tomatsovs og skørt fyld
+
+Pizzaen starter med bar dej. Vælg **Tegn med tomatsovs**, og tegn med finger, mus eller pen. Et tryk laver en prik. Sovsen ligger under fyldet; Fortryd fjerner en hel streg. Med tastatur laver Enter eller mellemrum en sovseprik.
+
+Vælg **Skørt fyld** for slik, regnbuer, popcorn, jordbær, broccoli og is. Både klassisk og skørt fyld kan blandes i begge spiltilstande. Kundebestillinger følger stadig deres viste opskrift; skørt ekstra fyld påvirker stjernerne som andet ekstra fyld. Tomatsovs er altid valgfri og tæller ikke med i bedømmelsen.
 
 ## Spil
 
@@ -36,3 +42,7 @@ Ingen eksterne skrifttyper, analyseværktøjer eller konti. Spillet kræver inge
 Pak ZIP-filen ud og læg indholdet af projektmappen i dit repository. `package-lock.json` medfølger; `node_modules` og build-output medfølger ikke. Vite bruger som standard domænets rod; til en undermappe kan du bygge med `npm run build -- --base=/repo-navn/`.
 
 Denne levering er ikke deployet. Et push til et eksisterende repository kan udløse din egen automatiske hostingopsætning. Bevar dine eksisterende licens- og billedrettigheder; der er ikke tilføjet en ny licens.
+
+## Fyldillustrationer
+
+Otte originale SVG-illustrationer findes i `public/assets/toppings/`. De er lokale vektorbilleder med organiske former, farveforløb og kornet tekstur. `IngredientArt` genbruger dem i alle spillets visninger. Det skøre fyld bruger fortsat emoji.

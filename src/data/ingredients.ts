@@ -4,7 +4,51 @@ export const ingredients: {
   name: string;
   emoji: string;
   color: string;
+  category?: "silly";
 }[] = [
+  { id: "sauce", name: "Tomatsovs", emoji: "🍅", color: "#d94b36" },
+  {
+    id: "candy",
+    name: "Slik",
+    emoji: "🍬",
+    color: "#ffc4e4",
+    category: "silly",
+  },
+  {
+    id: "rainbow",
+    name: "Regnbue",
+    emoji: "🌈",
+    color: "#d9ceff",
+    category: "silly",
+  },
+  {
+    id: "popcorn",
+    name: "Popcorn",
+    emoji: "🍿",
+    color: "#fff1b8",
+    category: "silly",
+  },
+  {
+    id: "strawberry",
+    name: "Jordbær",
+    emoji: "🍓",
+    color: "#ffd4d4",
+    category: "silly",
+  },
+  {
+    id: "broccoli",
+    name: "Broccoli",
+    emoji: "🥦",
+    color: "#d4efbb",
+    category: "silly",
+  },
+  {
+    id: "icecream",
+    name: "Is",
+    emoji: "🍦",
+    color: "#ffe2b5",
+    category: "silly",
+  },
   { id: "cheese", name: "Ost", emoji: "🧀", color: "#ffe177" },
   { id: "ham", name: "Skinke", emoji: "🥓", color: "#f7a6a5" },
   { id: "pepperoni", name: "Pepperoni", emoji: "🔴", color: "#cb5548" },

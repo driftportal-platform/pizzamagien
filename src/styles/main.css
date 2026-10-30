@@ -654,3 +654,63 @@ progress {
     font-size: 42px;
   }
 }
+/* Sauce is painted under toppings; only drawing mode captures touch gestures. */
+.sauce.dough {
+  background: radial-gradient(circle at 35% 30%, #fff0c5, #f5d28b);
+  box-shadow: inset 0 0 15px #d5a666;
+}
+.baked .sauce.dough {
+  background: radial-gradient(circle at 35% 30%, #ffe7aa, #e7b764);
+}
+.sauce-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.pizza.drawing {
+  touch-action: none;
+  cursor: crosshair;
+}
+.sauce-tool,
+.filling-tabs button {
+  border: 3px solid #e7d4b8;
+  background: #fff1d7;
+  border-radius: 16px;
+  padding: 10px;
+  color: #643d31;
+  font-weight: 800;
+  min-height: 48px;
+}
+.sauce-tool[aria-pressed="true"] {
+  background: #ffe0ce;
+  border-color: #d94b36;
+}
+.filling-tabs {
+  display: flex;
+  gap: 6px;
+}
+.filling-tabs button {
+  flex: 1;
+  font-size: 13px;
+  padding: 8px 3px;
+}
+.filling-tabs button[aria-pressed="true"] {
+  background: #e3ddff;
+  border-color: #9c83cc;
+}
+.silly-topping {
+  font-size: clamp(18px, 3vw, 34px);
+  background: transparent !important;
+  border: 0;
+  box-shadow: none;
+  width: 11%;
+  height: 11%;
+}
+/* Food illustrations have their own shape and transparent surroundings. */
+.topping{width:11%;height:11%;background:transparent!important;border:0!important;border-radius:0;box-shadow:none;overflow:visible;filter:drop-shadow(1px 2px 1px #68402c55)}
+.topping-cheese{width:15%;height:15%}.topping-ham{width:13%;height:13%}.topping-corn{width:5.5%;height:5.5%}.topping-olive{width:8%;height:8%}.topping-pineapple{width:9%;height:9%}.topping-pepper{width:12%;height:12%}
+.ingredient-art{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}.ingredient-emoji{display:grid;place-items:center;width:48px;height:44px}.request-items .ingredient-art{width:36px;height:36px}.drag-ghost{width:60px;height:60px}.baked .topping .ingredient-art{filter:sepia(.13) saturate(1.12) brightness(.94)}.baked .topping-cheese{filter:drop-shadow(0 1px 1px #b8792a88);transform-origin:center}.silly-topping{filter:drop-shadow(1px 2px 1px #68402c44)}
+@media(max-width:580px){.ingredient-emoji{width:38px;height:34px}.request-items .ingredient-art{width:28px;height:28px}}
